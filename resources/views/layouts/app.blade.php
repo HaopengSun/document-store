@@ -17,12 +17,18 @@
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav mr-auto">
             <li class="nav-item active">
-                <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
+                <a class="nav-link" href="#">Home<span class="sr-only">(current)</span></a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="#">Link</a>
+                <a class="nav-link" href="#">Documents</a>
             </li>
-    </div>
+            <li class="nav-item">
+                <a class="nav-link" href="{{ route('register') }}">Register</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#">Login</a>
+            </li>
+        </div>
     </nav>
     @yield('content')
     <script src="{{ asset('js/app.js') }}"></script>
