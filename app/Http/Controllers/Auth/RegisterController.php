@@ -19,10 +19,17 @@ class RegisterController extends Controller
             'password' => 'required|confirmed',
         ]);
 
+        // create user in the database
         User::create([
             'name' => $request->name,
             'email' => $request->email,
             'password' => Hash::make($request->password),
         ]);
+
+        // login user
+        auth()->attempt($request->only('email', 'password'));
+
+        // redirect login user to home page
+        return redirect()->route('home');
     }
 }

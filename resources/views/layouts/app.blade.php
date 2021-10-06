@@ -17,17 +17,32 @@
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav mr-auto">
             <li class="nav-item active">
-                <a class="nav-link" href="#">Home<span class="sr-only">(current)</span></a>
+                <a class="nav-link" href="{{ route('home') }}">Home<span class="sr-only">(current)</span></a>
+            </li>
+
+            @auth
+            <li class="nav-item">
+                <a class="nav-link" href="{{ route('document') }}">Documents</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="#">Documents</a>
+                <a class="nav-link" href="">{{ auth()->user()->name }}</a>
             </li>
+            
+            <li class="nav-item">
+                @csrf
+                <a class="nav-link" href="#">Logout</a>
+            </li>
+            @endauth
+
+            @guest
             <li class="nav-item">
                 <a class="nav-link" href="{{ route('register') }}">Register</a>
             </li>
+            
             <li class="nav-item">
-                <a class="nav-link" href="#">Login</a>
+                <a class="nav-link" href="{{ route('login') }}">Login</a>
             </li>
+            @endguest
         </div>
     </nav>
     @yield('content')
