@@ -14,10 +14,10 @@ Route::get('/documents', function () {
     return view('documents.index');
 })->middleware('verified')->name('document');
 
-Route::get('/register', [RegisterController::class, 'index'])->name('register');
+Route::get('/register', [RegisterController::class, 'index'])->middleware('guest')->name('register');
 Route::post('/register', [RegisterController::class, 'register']);
 
-Route::get('/login', [LoginController::class, 'index'])->name('login');
+Route::get('/login', [LoginController::class, 'index'])->middleware('guest')->name('login');
 Route::post('/login', [LoginController::class, 'login']);
 
 Route::post('/logout', [LogoutController::class, 'index'])->name('logout');
@@ -55,6 +55,6 @@ Route::get('/reset-password/{token}', [ResetPasswordController::class, 'index'])
     ->middleware('guest')
     ->name('password.reset');
 
-Route::get('/reset-password', [ResetPasswordController::class, 'handle'])
+Route::post('/reset-password', [ResetPasswordController::class, 'saveNewPassword'])
     ->middleware('guest')
     ->name('password.update');

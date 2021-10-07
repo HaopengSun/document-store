@@ -2,13 +2,13 @@
 
 @section('content')
 
-<h1>Verify email</h1>
+<h1 class='text-center'>Verify email</h1>
 
-<p>Please verify your email address by clicking the link in the mail we just sent you. Thanks!</p>
+<p class='text-center'>Please verify your email address by clicking the link in the mail we just sent you. Thanks!</p>
 
-<form action="{{ route('verification.request') }}" method="post">
+<form class="w-50 m-auto text-center" action="{{ route('verification.request') }}" method="post">
     @csrf
-    <button type="submit">Request a new link</button>
+    <button class="btn btn-outline-primary" type="submit">Request a new link</button>
 </form>
 
 @endsection
