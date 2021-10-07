@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Hash;
 use App\Http\Controllers\Controller;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Validation\Rule;
 
 class RegisterController extends Controller
 {
@@ -18,7 +19,7 @@ class RegisterController extends Controller
     public function register(Request $request){
         $this->validate($request, [
             'name' => 'required|max:255',
-            'email' => 'required|email|max:255',
+            'email' => 'required|unique:users,email|email|max:255',
             'password' => 'required|confirmed',
         ]);
 
