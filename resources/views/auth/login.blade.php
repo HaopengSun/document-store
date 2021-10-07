@@ -24,6 +24,10 @@
         @if (session('status'))
             <div class="text-danger">{{ session('status') }}</div>
         @endif
-            <button type="submit" class="btn btn-primary">Submit</button>
+            <button type="submit" class="btn btn-outline-primary">Submit</button>
+    </form>
+    <form class="w-50 m-auto" action="{{ route('password.request') }}" method="get">
+        @csrf
+        <button type="submit" class="btn btn-outline-dark mt-3">Forget Password</button>
     </form>
 @endsection

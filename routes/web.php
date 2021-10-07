@@ -5,6 +5,8 @@ use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\LogoutController;
 use App\Http\Controllers\Auth\EmailVerificationController;
+use App\Http\Controllers\Auth\PasswordRequestController;
+use App\Http\Controllers\Auth\ResetPasswordController;
 use App\Http\Controllers\HomeController;
 use Illuminate\Http\Request;
 
@@ -40,3 +42,19 @@ Route::post('/verify-email/request', function (Request $request) {
 Route::get('/verify-email/{id}/{hash}', [EmailVerificationController::class, 'verify'])
     ->middleware(['auth', 'signed'])
     ->name('verification.verify');
+
+Route::get('/forgot-password', [PasswordRequestController::class, 'index'])
+    ->middleware('guest')
+    ->name('password.request');
+
+Route::post('/forgot-password', [PasswordRequestController::class, 'resend'])
+    ->middleware('guest')
+    ->name('password.email');
+
+Route::get('/reset-password/{token}', [ResetPasswordController::class, 'index'])
+    ->middleware('guest')
+    ->name('password.reset');
+
+Route::post('/reset-password', [ResetPasswordController::class, 'saveNewPassword'])
+    ->middleware('guest')
+    ->name('password.update');
