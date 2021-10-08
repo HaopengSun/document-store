@@ -4,7 +4,7 @@
     <h1 class='text-center'>Forgot your password?</h1>
     <p class='text-center'>Fill in your email below and we'll send you a link to reset your password.</p>
 
-    <form class="w-50 m-auto" method="post" action="{{ route('password.email') }}">
+    <form class="w-50 m-auto" method="post" action="{{ route('password.email', app()->getLocale()) }}">
         @csrf
 
         @if(session()->has('success'))

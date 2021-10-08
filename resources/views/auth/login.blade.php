@@ -1,10 +1,10 @@
 @extends('layouts.app')
 
 @section('content')
-    <form class="w-50 m-auto" action="{{ route('login') }}" method="post">
+    <form class="w-50 m-auto" action="{{ route('login', app()->getLocale()) }}" method="post">
         @csrf
         <div class="form-group">
-            <label for="exampleInputEmail1">Email address</label>
+            <label for="email">Email address</label>
             <input type="email" name="email" class="form-control" id="email" aria-describedby="emailHelp" placeholder="Email" value="{{ old('email') }}">
             
             @error('email')
@@ -26,7 +26,7 @@
         @endif
             <button type="submit" class="btn btn-outline-primary">Submit</button>
     </form>
-    <form class="w-50 m-auto" action="{{ route('password.request') }}" method="get">
+    <form class="w-50 m-auto" action="{{ route('password.request', app()->getLocale()) }}" method="get">
         @csrf
         <button type="submit" class="btn btn-outline-dark mt-3">Forget Password</button>
     </form>
