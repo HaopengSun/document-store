@@ -89,6 +89,21 @@ class DocumentController extends Controller
         return response()->download($pathToFile);
     }
 
+    public function viewfile($id, $file)
+    {
+        $where[]=['id','=', $id];
+        $where[]=['file','=', $file];
+        $document = Document::where($where)->firstOrFail();
+
+        // Check for correct user
+        if(auth()->user()->id !== $document->user_id){
+            return redirect('/documents')->with('error', 'Unauthorized Page');
+        }
+
+        $pathToFile = public_path('storage/file/'.$document->file);
+        return response()->file($pathToFile);
+    }
+
     /**
      * Display the specified resource.
      *

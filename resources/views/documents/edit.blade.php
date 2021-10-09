@@ -15,6 +15,10 @@
             <textarea type="text" id="summary-ckeditor" name="description" class="form-control" placeholder="Description"
             value="{{ $document->description }}"></textarea>
         </div>
+        <div>
+            <p>{{ $document->file }}</p>
+            <a href="{{ route('document.viewfile', ['id'=>$document->id, 'file'=>$document->file]) }}">View file</a>
+        </div>
         <label for="file">Select file</label>
             <input type="file" id="summary-ckeditor" name="file" class="form-control" placeholder="Description">
         </div>

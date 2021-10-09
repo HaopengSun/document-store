@@ -67,4 +67,6 @@ Route::resource('/documents', DocumentController::class)->middleware('verified')
 
 Route::get('/documents/{id}/{file}', [DocumentController::class, 'download'])->middleware('verified')->name('document.download');
 
+Route::get('/documents/{id}/viewfile/{file}', [DocumentController::class, 'viewfile'])->middleware('verified')->name('document.viewfile');
+
 // });
