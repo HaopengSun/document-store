@@ -17,7 +17,7 @@ class DocumentController extends Controller
      */
     public function index()
     {
-        $documents = Document::orderBy('title', 'desc')->get();
+        $documents = Document::orderBy('created_at', 'desc')->get();
 
         return view('documents.index', [
             'documents' => $documents
@@ -42,7 +42,18 @@ class DocumentController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $this->validate($request, [
+            'title' => 'required',
+            'description' => 'required',
+        ]);
+
+        // Create Post
+        $document = new Document;
+        $document->title = $request->input('title');
+        $document->description = $request->input('description');
+        $document->save();
+
+        return redirect('/documents')->with('success', 'Document Created');
     }
 
     /**

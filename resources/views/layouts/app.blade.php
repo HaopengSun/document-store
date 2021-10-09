@@ -51,5 +51,9 @@
     </nav>
     @yield('content')
     <script src="{{ asset('js/app.js') }}"></script>
+    <script src="//cdn.ckeditor.com/4.16.2/standard/ckeditor.js"></script>
+    <script>
+        CKEDITOR.replace( 'summary-ckeditor' );
+    </script>
 </body>
 </html>

@@ -2,6 +2,10 @@
 
 @section('content')
     <h1>Documents</h1>
+    <div class="container">
+        @include('inc.message')
+    </div>
+    <a href="{{ route('documents.create') }}">Add new document</a>
     @if(count($documents) > 0)
         @foreach($documents as $document)
             <div class="well">
