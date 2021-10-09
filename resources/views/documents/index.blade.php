@@ -12,7 +12,7 @@
                 <div class="row">
                     <div class="col-md-8 col-sm-8">
                         <h3><a href="/documents/{{$document->id}}">{{$document->title}}</a></h3>
-                        <small>Written on {{$document->created_at}}</small>
+                        <small>Written on {{$document->created_at}} by {{$document->user->name}}</small>
                     </div>
                 </div>
             </div>

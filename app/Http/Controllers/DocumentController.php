@@ -10,6 +10,11 @@ use App;
 class DocumentController extends Controller
 {
 
+    public function __construct()
+    {
+        $this->middleware('auth', ['except' => ['index', 'show']]);
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -51,6 +56,7 @@ class DocumentController extends Controller
         $document = new Document;
         $document->title = $request->input('title');
         $document->description = $request->input('description');
+        $document->user_id = auth()->user()->id;
         $document->save();
 
         return redirect('/documents')->with('success', 'Document Created');
@@ -87,9 +93,9 @@ class DocumentController extends Controller
         }
 
         // Check for correct user
-        // if(auth()->user()->id !==$post->user_id){
-        //     return redirect('/posts')->with('error', 'Unauthorized Page');
-        // }
+        if(auth()->user()->id !== $document->user_id){
+            return redirect('/documents')->with('error', 'Unauthorized Page');
+        }
 
         return view('documents.edit')->with('document', $document);
     }
@@ -134,9 +140,9 @@ class DocumentController extends Controller
             return redirect('/documents')->with('error', 'No Document Found');
         }
 
-        // if(auth()->user()->id !==$post->user_id){
-        //     return redirect('/posts')->with('error', 'Unauthorized Page');
-        // }
+        if(auth()->user()->id !== $document->user_id){
+            return redirect('/documents')->with('error', 'Unauthorized Page');
+        }
 
         $document->delete();
         return redirect('/documents')->with('success', 'Document Removed');
