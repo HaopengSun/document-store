@@ -15,6 +15,9 @@
             <textarea type="text" id="summary-ckeditor" name="description" class="form-control" placeholder="Description"
             value="{{ $document->description }}"></textarea>
         </div>
+        <label for="file">Select file</label>
+            <input type="file" id="summary-ckeditor" name="file" class="form-control" placeholder="Description">
+        </div>
         <button type="submit" class="btn btn-outline-primary">Submit</button>
     </form>
 @endsection

@@ -64,4 +64,7 @@ Route::post('/reset-password', [ResetPasswordController::class, 'saveNewPassword
     ->name('password.update');
 
 Route::resource('/documents', DocumentController::class)->middleware('verified');
+
+Route::get('/documents/{id}/{file}', [DocumentController::class, 'download'])->middleware('verified')->name('document.download');
+
 // });

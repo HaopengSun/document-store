@@ -50,16 +50,43 @@ class DocumentController extends Controller
         $this->validate($request, [
             'title' => 'required',
             'description' => 'required',
+            'file'=>'required|mimes:csv,doc,docx,txt,xlx,xls,pdf|nullable|max:2048',
         ]);
+
+        if($request->hasFile('file')){
+            $filenameWithExt = $request->file('file')->getClientOriginalName();
+            $filename = pathinfo($filenameWithExt, PATHINFO_FILENAME);
+            $extension = $request->file('file')->getClientOriginalExtension();
+            $fileNameToStore = $filename.'-'.time().'.'.$extension;
+            $path = $request->file('file')->storeAs('public/file', $fileNameToStore);
+        } else {
+            $fileNameToStore = 'nofile.pdf';
+        }
 
         // Create Post
         $document = new Document;
         $document->title = $request->input('title');
         $document->description = $request->input('description');
+        $document->file = $fileNameToStore;
         $document->user_id = auth()->user()->id;
         $document->save();
 
         return redirect('/documents')->with('success', 'Document Created');
+    }
+
+    public function download($id, $file)
+    {
+        $where[]=['id','=', $id];
+        $where[]=['file','=', $file];
+        $document = Document::where($where)->firstOrFail();
+
+        // Check for correct user
+        if(auth()->user()->id !== $document->user_id){
+            return redirect('/documents')->with('error', 'Unauthorized Page');
+        }
+
+        $pathToFile = public_path('storage/file/'.$document->file);
+        return response()->download($pathToFile);
     }
 
     /**
