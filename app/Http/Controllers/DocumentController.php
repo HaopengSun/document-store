@@ -79,7 +79,19 @@ class DocumentController extends Controller
      */
     public function edit($id)
     {
-        //
+        $document = Document::find($id);
+        
+        //Check if post exists before deleting
+        if (!isset($document)){
+            return redirect('/documents')->with('error', 'No Document Found');
+        }
+
+        // Check for correct user
+        // if(auth()->user()->id !==$post->user_id){
+        //     return redirect('/posts')->with('error', 'Unauthorized Page');
+        // }
+
+        return view('documents.edit')->with('document', $document);
     }
 
     /**
@@ -91,7 +103,21 @@ class DocumentController extends Controller
      */
     public function update(Request $request, $id)
     {
+        $this->validate($request, [
+            'title' => 'required',
+            'description' => 'required'
+        ]);
 
+        $document = Document::find($id);
+
+        $document->title = $request->input('title');
+        $document->description = $request->input('description');
+        // if($request->hasFile('cover_image')){
+        //     $post->cover_image = $fileNameToStore;
+        // }
+        $document->save();
+
+        return redirect('/documents')->with('success', 'Document Updated');
     }
 
     /**
@@ -102,6 +128,17 @@ class DocumentController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $document = Document::find($id);
+        
+        if (!isset($document)){
+            return redirect('/documents')->with('error', 'No Document Found');
+        }
+
+        // if(auth()->user()->id !==$post->user_id){
+        //     return redirect('/posts')->with('error', 'Unauthorized Page');
+        // }
+
+        $document->delete();
+        return redirect('/documents')->with('success', 'Document Removed');
     }
 }
