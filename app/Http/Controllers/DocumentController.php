@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\Document;
 use Illuminate\Contracts\Foundation\Application;
 use App;
+use Illuminate\Support\Facades\Storage;
 
 class DocumentController extends Controller
 {
@@ -184,6 +185,11 @@ class DocumentController extends Controller
 
         if(auth()->user()->id !== $document->user_id){
             return redirect('/documents')->with('error', 'Unauthorized Page');
+        }
+
+        if($document->file != 'nofile.pdf'){
+            // Delete Image
+            Storage::delete('public/file/'.$document->file);
         }
 
         $document->delete();
