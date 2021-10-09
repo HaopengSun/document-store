@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
-    <form class="w-50 m-auto" action="{{ route('register', app()->getLocale()) }}" method="post">
+    <form class="w-50 m-auto" action="{{ route('register') }}" method="post">
         @csrf
         <div class="form-group">
             <label for="exampleInputEmail1">Name</label>

@@ -3,7 +3,7 @@
 @section('content')
     <h1 class='text-center'>Reset your password</h1>
 
-    <form class="w-50 m-auto" method="post" action="{{ route('password.update', app()->getLocale()) }}">
+    <form class="w-50 m-auto" method="post" action="{{ route('password.update') }}">
         @csrf
     
         <input type="hidden" name="token" value="{{ $token }}">

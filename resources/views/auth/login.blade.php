@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
-    <form class="w-50 m-auto" action="{{ route('login', app()->getLocale()) }}" method="post">
+    <form class="w-50 m-auto" action="{{ route('login') }}" method="post">
         @csrf
         <div class="form-group">
             <label for="email">Email address</label>
@@ -26,7 +26,7 @@
         @endif
             <button type="submit" class="btn btn-outline-primary">Submit</button>
     </form>
-    <form class="w-50 m-auto" action="{{ route('password.request', app()->getLocale()) }}" method="get">
+    <form class="w-50 m-auto" action="{{ route('password.request') }}" method="get">
         @csrf
         <button type="submit" class="btn btn-outline-dark mt-3">Forget Password</button>
     </form>
