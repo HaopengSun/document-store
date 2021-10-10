@@ -10,6 +10,9 @@ use Illuminate\Support\Facades\Storage;
 use FileVault;
 use Illuminate\Support\Str;
 
+use App\Jobs\EncryptFile;
+use App\Jobs\MoveFileToS3;
+
 class DocumentController extends Controller
 {
 
@@ -61,8 +64,11 @@ class DocumentController extends Controller
             $filename = pathinfo($filenameWithExt, PATHINFO_FILENAME);
             $extension = $request->file('file')->getClientOriginalExtension();
             $fileNameToStore = $filename.'-'.time().'.'.$extension;
-            $file = disk('s3')->putFileAs('public/file/', $request->file('file'), $fileNameToStore);
-            FileVault::encrypt($file);
+
+            $localFile = Storage::putFileAs('file/', $request->file('file'), $fileNameToStore);
+            EncryptFile::withChain([ new MoveFileToS3($localFile) ])->dispatch($localFile);
+
+            // FileVault::encrypt($file);
         } else {
             $fileNameToStore = 'nofile.pdf';
         }
@@ -85,14 +91,19 @@ class DocumentController extends Controller
         $where[]=['file','=', $file];
         $document = Document::where($where)->firstOrFail();
 
-        // Check for correct user
         if(auth()->user()->id !== $document->user_id){
             return redirect('/documents')->with('error', 'Unauthorized Page');
         }
 
-        $pathToFile = public_path('storage/file/'.$document->file);
-        FileVault::decryptCopy('public/file/'.$document->file.'.enc');
-        return response()->download($pathToFile, $document->filename)->deleteFileAfterSend(true);
+        // local storage
+        // $pathToFile = public_path('storage/file/'.$document->file);
+        // FileVault::decryptCopy('public/file/'.$document->file.'.enc');
+        // return response()->download($pathToFile, $document->filename)->deleteFileAfterSend(true);
+
+        $filename = $file.'.enc';
+        return response()->streamDownload(function () use ($filename) {
+            FileVault::disk('s3')->streamDecrypt('file/' . $filename);
+        }, Str::replaceLast('.enc', '', $filename));
     }
 
     public function viewfile($id, $file)
@@ -101,14 +112,26 @@ class DocumentController extends Controller
         $where[]=['file','=', $file];
         $document = Document::where($where)->firstOrFail();
 
-        // Check for correct user
         if(auth()->user()->id !== $document->user_id){
             return redirect('/documents')->with('error', 'Unauthorized Page');
         }
 
         $pathToFile = public_path('storage/file/'.$document->file);
-        FileVault::decryptCopy('public/file/'.$document->file.'.enc');
-        return response()->file($pathToFile)->deleteFileAfterSend(true);
+
+        // decrypt the file in s3
+        FileVault::disk('s3')->decryptCopy('file/' . $file . '.enc');
+        $s3_file = Storage::disk('s3')->get('file/' . $file);
+
+        // get the file and view
+        $temp_filepath = tempnam(sys_get_temp_dir(), '');
+        file_put_contents($temp_filepath, $s3_file);
+
+        // delete decryped file in s3
+        Storage::disk('s3')->delete('file/'.$document->file);
+
+        return response()
+            ->download($temp_filepath, $document->file, [], 'inline')
+            ->deleteFileAfterSend();
     }
 
     /**
@@ -169,13 +192,17 @@ class DocumentController extends Controller
 
         // if user replace the file
         if($request->hasFile('file')){
+            // Storage::delete('public/file/'.$document->file.'.enc');
             disk('s3')->delete('public/file/'.$document->file.'.enc');
 
             $filenameWithExt = $request->file('file')->getClientOriginalName();
             $filename = pathinfo($filenameWithExt, PATHINFO_FILENAME);
             $extension = $request->file('file')->getClientOriginalExtension();
             $fileNameToStore = $filename.'-'.time().'.'.$extension;
+
+            // $file = Storage::putFileAs('public/file/', $request->file('file'), $fileNameToStore);
             $file = disk('s3')->putFileAs('public/file/', $request->file('file'), $fileNameToStore);
+
             FileVault::encrypt($file);
 
             $document->file = $fileNameToStore;
@@ -206,7 +233,8 @@ class DocumentController extends Controller
         }
 
         if($document->file != 'nofile.pdf'){
-            disk('s3')->delete('public/file/'.$document->file.'.enc');
+            // Storage::delete('public/file/'.$document->file.'.enc');
+            Storage::disk('s3')->delete('file/'.$document->file.'.enc');
         }
 
         $document->delete();

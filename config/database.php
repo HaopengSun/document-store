@@ -15,7 +15,7 @@ return [
     |
     */
 
-    'default' => env('DB_CONNECTION', 'pgsql'),
+    'default' => env('DB_CONNECTION', 's3'),
 
     /*
     |--------------------------------------------------------------------------
@@ -90,7 +90,20 @@ return [
             'prefix' => '',
             'prefix_indexes' => true,
         ],
-
+        's3' => [
+            'driver' => 's3',
+            'key' => env('AWS_ACCESS_KEY_ID'),
+            'secrte' => env('AWS_SECRET_ACCESS_KEY'),
+            'bucket' => env('AWS_BUCKET'),
+            'region' => env('AWS_DEFAULT_REGION'),
+            'endpoint' => env('AWS_USE_PATH_STYLE_ENDPOINT'),
+            'url' => env('AWS_URL'),
+            'cache' => [
+                'store' => 'memcached',
+                'expire' => 600,
+                'prefix' => 'cache-prefix',
+            ],
+        ],
     ],
 
     /*
