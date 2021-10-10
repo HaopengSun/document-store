@@ -7,6 +7,8 @@ use App\Models\Document;
 use Illuminate\Contracts\Foundation\Application;
 use App;
 use Illuminate\Support\Facades\Storage;
+use FileVault;
+use Illuminate\Support\Str;
 
 class DocumentController extends Controller
 {
@@ -59,7 +61,8 @@ class DocumentController extends Controller
             $filename = pathinfo($filenameWithExt, PATHINFO_FILENAME);
             $extension = $request->file('file')->getClientOriginalExtension();
             $fileNameToStore = $filename.'-'.time().'.'.$extension;
-            $path = $request->file('file')->storeAs('public/file', $fileNameToStore);
+            $file = Storage::putFileAs('public/file/', $request->file('file'), $fileNameToStore);
+            FileVault::encrypt($file);
         } else {
             $fileNameToStore = 'nofile.pdf';
         }
@@ -87,6 +90,7 @@ class DocumentController extends Controller
         }
 
         $pathToFile = public_path('storage/file/'.$document->file);
+        FileVault::decryptCopy('public/file/'.$document->file.'.enc');
         return response()->download($pathToFile);
     }
 
@@ -102,6 +106,7 @@ class DocumentController extends Controller
         }
 
         $pathToFile = public_path('storage/file/'.$document->file);
+        FileVault::decryptCopy('public/file/'.$document->file.'.enc');
         return response()->file($pathToFile);
     }
 
@@ -188,8 +193,7 @@ class DocumentController extends Controller
         }
 
         if($document->file != 'nofile.pdf'){
-            // Delete Image
-            Storage::delete('public/file/'.$document->file);
+            Storage::delete('public/file/'.$document->file.'.enc');
         }
 
         $document->delete();
