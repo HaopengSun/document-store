@@ -61,7 +61,7 @@ class DocumentController extends Controller
             $filename = pathinfo($filenameWithExt, PATHINFO_FILENAME);
             $extension = $request->file('file')->getClientOriginalExtension();
             $fileNameToStore = $filename.'-'.time().'.'.$extension;
-            $file = Storage::putFileAs('public/file/', $request->file('file'), $fileNameToStore);
+            $file = disk('s3')->putFileAs('public/file/', $request->file('file'), $fileNameToStore);
             FileVault::encrypt($file);
         } else {
             $fileNameToStore = 'nofile.pdf';
@@ -169,13 +169,13 @@ class DocumentController extends Controller
 
         // if user replace the file
         if($request->hasFile('file')){
-            Storage::delete('public/file/'.$document->file.'.enc');
+            disk('s3')->delete('public/file/'.$document->file.'.enc');
 
             $filenameWithExt = $request->file('file')->getClientOriginalName();
             $filename = pathinfo($filenameWithExt, PATHINFO_FILENAME);
             $extension = $request->file('file')->getClientOriginalExtension();
             $fileNameToStore = $filename.'-'.time().'.'.$extension;
-            $file = Storage::putFileAs('public/file/', $request->file('file'), $fileNameToStore);
+            $file = disk('s3')->putFileAs('public/file/', $request->file('file'), $fileNameToStore);
             FileVault::encrypt($file);
 
             $document->file = $fileNameToStore;
@@ -206,7 +206,7 @@ class DocumentController extends Controller
         }
 
         if($document->file != 'nofile.pdf'){
-            Storage::delete('public/file/'.$document->file.'.enc');
+            disk('s3')->delete('public/file/'.$document->file.'.enc');
         }
 
         $document->delete();
