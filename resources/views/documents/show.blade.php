@@ -10,7 +10,7 @@
     </div>
     <hr>
     <div>
-        <h5>File name: {{ $document->file }}</h5>
+        <h5>File name: {{ $document->filename }}</h5>
     </div>
     <small>Written on {{$document->created_at}}</small>
     <hr>

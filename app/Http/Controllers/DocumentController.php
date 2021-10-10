@@ -72,6 +72,7 @@ class DocumentController extends Controller
         $document->title = $request->input('title');
         $document->description = $request->input('description');
         $document->file = $fileNameToStore;
+        $document->filename = $filenameWithExt;
         $document->user_id = auth()->user()->id;
         $document->save();
 
@@ -91,7 +92,7 @@ class DocumentController extends Controller
 
         $pathToFile = public_path('storage/file/'.$document->file);
         FileVault::decryptCopy('public/file/'.$document->file.'.enc');
-        return response()->download($pathToFile)->deleteFileAfterSend(true);
+        return response()->download($pathToFile, $document->filename)->deleteFileAfterSend(true);
     }
 
     public function viewfile($id, $file)
@@ -178,6 +179,7 @@ class DocumentController extends Controller
             FileVault::encrypt($file);
 
             $document->file = $fileNameToStore;
+            $document->filename = $filenameWithExt;
         }
 
         $document->save();
