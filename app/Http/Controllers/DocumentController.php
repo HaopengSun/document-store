@@ -103,7 +103,7 @@ class DocumentController extends Controller
         $filename = $file.'.enc';
         return response()->streamDownload(function () use ($filename) {
             FileVault::disk('s3')->streamDecrypt('file/' . $filename);
-        }, Str::replaceLast('.enc', '', $filename));
+        }, $document->filename);
     }
 
     public function viewfile($id, $file)
@@ -193,7 +193,9 @@ class DocumentController extends Controller
         // if user replace the file
         if($request->hasFile('file')){
             // Storage::delete('public/file/'.$document->file.'.enc');
-            disk('s3')->delete('public/file/'.$document->file.'.enc');
+
+            // delete file in s3
+            Storage::disk('s3')->delete('file/'.$document->file.'.enc');
 
             $filenameWithExt = $request->file('file')->getClientOriginalName();
             $filename = pathinfo($filenameWithExt, PATHINFO_FILENAME);
@@ -201,9 +203,10 @@ class DocumentController extends Controller
             $fileNameToStore = $filename.'-'.time().'.'.$extension;
 
             // $file = Storage::putFileAs('public/file/', $request->file('file'), $fileNameToStore);
-            $file = disk('s3')->putFileAs('public/file/', $request->file('file'), $fileNameToStore);
 
-            FileVault::encrypt($file);
+            // upload file to s3
+            $localFile = Storage::putFileAs('file/', $request->file('file'), $fileNameToStore);
+            EncryptFile::withChain([ new MoveFileToS3($localFile) ])->dispatch($localFile);
 
             $document->file = $fileNameToStore;
             $document->filename = $filenameWithExt;
