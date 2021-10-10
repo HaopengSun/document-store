@@ -18,7 +18,7 @@
         @if(Auth::user()->id == $document->user_id)
             <a href="{{ route('document.download', ['id'=>$document->id, 'file'=>$document->file]) }}">Download file</a>
             <a href="{{ route('document.viewfile', ['id'=>$document->id, 'file'=>$document->file]) }}">View file</a>
-            <a href="/documents/{{$document->id}}/edit" class="btn btn-default">Edit</a>
+            <a href="{{ route('documents.edit', $document->id) }}" class="btn btn-default">Edit</a>
             <form action="{{ route('documents.destroy', $document->id) }}" method="post">
                 @csrf
                 @method('DELETE')
