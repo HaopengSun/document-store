@@ -91,7 +91,7 @@ class DocumentController extends Controller
 
         $pathToFile = public_path('storage/file/'.$document->file);
         FileVault::decryptCopy('public/file/'.$document->file.'.enc');
-        return response()->download($pathToFile);
+        return response()->download($pathToFile)->deleteFileAfterSend(true);
     }
 
     public function viewfile($id, $file)
@@ -107,7 +107,7 @@ class DocumentController extends Controller
 
         $pathToFile = public_path('storage/file/'.$document->file);
         FileVault::decryptCopy('public/file/'.$document->file.'.enc');
-        return response()->file($pathToFile);
+        return response()->file($pathToFile)->deleteFileAfterSend(true);
     }
 
     /**
