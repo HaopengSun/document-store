@@ -135,7 +135,6 @@ class DocumentController extends Controller
     {
         $document = Document::find($id);
         
-        //Check if post exists before deleting
         if (!isset($document)){
             return redirect('/documents')->with('error', 'No Document Found');
         }
@@ -166,9 +165,21 @@ class DocumentController extends Controller
 
         $document->title = $request->input('title');
         $document->description = $request->input('description');
-        // if($request->hasFile('cover_image')){
-        //     $post->cover_image = $fileNameToStore;
-        // }
+
+        // if user replace the file
+        if($request->hasFile('file')){
+            Storage::delete('public/file/'.$document->file.'.enc');
+
+            $filenameWithExt = $request->file('file')->getClientOriginalName();
+            $filename = pathinfo($filenameWithExt, PATHINFO_FILENAME);
+            $extension = $request->file('file')->getClientOriginalExtension();
+            $fileNameToStore = $filename.'-'.time().'.'.$extension;
+            $file = Storage::putFileAs('public/file/', $request->file('file'), $fileNameToStore);
+            FileVault::encrypt($file);
+
+            $document->file = $fileNameToStore;
+        }
+
         $document->save();
 
         return redirect('/documents')->with('success', 'Document Updated');

@@ -3,7 +3,7 @@
 
 @section('content')
     <h1>Edit Post</h1>
-    <form action="{{ route('documents.update', $document->id) }}" method="post">
+    <form action="{{ route('documents.update', $document->id) }}" method="post" enctype="multipart/form-data">
         @csrf
         @method('PUT')
         <div class="form-group">
@@ -16,11 +16,10 @@
             value="{{ $document->description }}"></textarea>
         </div>
         <div>
-            <p>{{ $document->file }}</p>
             <a href="{{ route('document.viewfile', ['id'=>$document->id, 'file'=>$document->file]) }}">View file</a>
         </div>
-        <label for="file">Select file</label>
-            <input type="file" id="summary-ckeditor" name="file" class="form-control" placeholder="Description">
+        <label for="file">Replace file</label>
+            <input type="file" id="file" name="file" class="form-control">
         </div>
         <button type="submit" class="btn btn-outline-primary">Submit</button>
     </form>

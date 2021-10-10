@@ -13,7 +13,7 @@
             <textarea type="text" id="summary-ckeditor" name="description" class="form-control" placeholder="Description"></textarea>
         </div>
         <label for="file">Select file</label>
-            <input type="file" id="summary-ckeditor" name="file" class="form-control" placeholder="Description">
+            <input type="file" id="file" name="file" class="form-control">
         </div>
         <button type="submit" class="btn btn-outline-primary">Submit</button>
     </form>
