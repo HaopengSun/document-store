@@ -16,7 +16,7 @@
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav mr-auto">
             <li class="nav-item active">
-                <a class="nav-link" href="{{ route('home') }}">{{__('Home')}}<span class="sr-only">(current)</span></a>
+                <a class="nav-link" href="{{ route('home') }}">{{__('Home')}}</a>
             </li>
 
             @auth
@@ -27,8 +27,8 @@
                 <a class="nav-link" href="">{{ auth()->user()->name }}</a>
             </li>
             
-            <li class="nav-item mt-1">
-                <form action="{{ route('logout') }}" method="post" class="inline p-0 mt-2">
+            <li class="nav-item">
+                <form action="{{ route('logout') }}" method="post" class="inline p-0">
                     @csrf
                     <button type="submit" class="btn btn-link">{{__('Logout')}}</button>
                 </form>
