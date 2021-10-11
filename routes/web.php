@@ -21,7 +21,7 @@ Route::post('/login', [LoginController::class, 'login']);
 
 Route::post('/logout', [LogoutController::class, 'index'])->name('logout');
 
-Route::get('/', [HomeController::class, 'index'])->name('home');
+// Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::get('/home', [HomeController::class, 'index'])->name('home');
 
 Route::get('/verify-email', [EmailVerificationController::class, 'index'])
