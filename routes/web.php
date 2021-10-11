@@ -11,9 +11,8 @@ use App\Http\Controllers\HomeController;
 use App\Http\Controllers\DocumentController;
 use Illuminate\Http\Request;
 
-Route::redirect('/', '/en');
+Route::redirect('/', '/home');
 
-    
 Route::get('/register', [RegisterController::class, 'index'])->middleware('guest')->name('register');
 Route::post('/register', [RegisterController::class, 'register']);
 
