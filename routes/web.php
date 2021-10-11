@@ -13,10 +13,6 @@ use Illuminate\Http\Request;
 
 Route::redirect('/', '/en');
 
-// Route::group(['prefix'=>'{language}'], function(){
-    // Route::get('/documents', function () {
-    //     return view('documents.index');
-    // })->middleware('verified')->name('document');
     
 Route::get('/register', [RegisterController::class, 'index'])->middleware('guest')->name('register');
 Route::post('/register', [RegisterController::class, 'register']);
@@ -32,10 +28,6 @@ Route::get('/home', [HomeController::class, 'index'])->name('home');
 Route::get('/verify-email', [EmailVerificationController::class, 'index'])
     ->middleware('auth')
     ->name('verification.notice');
-
-// Route::post('/verify-email/request', [EmailVerificationController::class, 'request'])
-//     ->middleware('auth')
-//     ->name('verification.request');
 
 Route::post('/verify-email/request', function (Request $request) {
         $request->user()->sendEmailVerificationNotification();
@@ -68,5 +60,3 @@ Route::resource('/documents', DocumentController::class)->middleware('verified')
 Route::get('/documents/{id}/{file}', [DocumentController::class, 'download'])->middleware('verified')->name('document.download');
 
 Route::get('/documents/{id}/viewfile/{file}', [DocumentController::class, 'viewfile'])->middleware('verified')->name('document.viewfile');
-
-// });

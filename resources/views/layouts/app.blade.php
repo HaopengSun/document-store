@@ -26,8 +26,8 @@
                 <a class="nav-link" href="">{{ auth()->user()->name }}</a>
             </li>
             
-            <li class="nav-item">
-                <form action="{{ route('logout') }}" method="post" class="inline p-0">
+            <li class="nav-item mt-1">
+                <form action="{{ route('logout') }}" method="post" class="inline p-0 mt-2">
                     @csrf
                     <button type="submit" class="btn btn-link">{{__('Logout')}}</button>
                 </form>
@@ -43,13 +43,6 @@
                 <a class="nav-link" href="{{ route('login') }}">{{__('Login')}}</a>
             </li>
             @endguest
-            <!-- <li class="nav-item">
-                <a class="nav-link" href="{{ route(Route::currentRouteName(), 'en')}}">EN</a>
-            </li>
-            
-            <li class="nav-item">
-                <a class="nav-link" href="{{ route(Route::currentRouteName(), 'fr') }}">FR</a>
-            </li> -->
         </div>
     </nav>
     @yield('content')
